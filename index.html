@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean BookStore - Digital Books Marketplace</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .h {
+            text-align: center;
+            font-size: 2.8rem;
+            color: #764ba2;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 50px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" style="color: purple;font-size: 2.3rem;">📚 Ocean BookStore</a>
+            <div>
+                <h8>- </h8>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="reader-browse.html">Browse Books</a>
+                <a href="author-upload.html">Sell Books</a>
+                <div>
+                    <h5> </h5>
+                </div>
+                <div id="authButtons">
+                    <a href="login.html" class="btn" style="background: #3498db; color:black;border-radius:15px ;padding: 20px 30px;">Login</a>
+                    <a href="register.html" class="btn" style="background: #2ecc71; color: black;border-radius: 15px;padding: 20px 20px;">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+        <div>
+            <h4> </h4>
+        </div>
+        
+        <div class="hero">
+            <h2>Where Authors Meet Readers</h2>
+            <p>Upload your books and earn 70% royalties</p>
+            <p>Discover and download amazing digital books</p>
+            <div style="margin-top: 40px;">
+                <a href="reader-browse.html" class="btn" style="background: white; color: #3498db; padding: 15px 30px; font-size: 1.1rem;border-radius: 10px;">
+                    Browse Books →
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>For Authors</h3>
+                <p>Upload your books and earn 70% of every sale. We handle payment processing and hosting.</p>
+                <a href="author-upload.html" class="btn btn-primary" style="margin-top: 15px;">
+                    Start Selling
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>For Readers</h3>
+                <p>Discover amazing books. Purchase once, download forever. Read on any device.</p>
+                <a href="reader-browse.html" class="btn btn-primary" style="margin-top: 15px;">
+                    Start Reading
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>For Everyone</h3>
+                <p>Platform takes 30% commission. Authors get 70%. Readers get great books. Everyone wins!</p>
+                <a href="register.html" class="btn btn-primary" style="margin-top: 15px;">
+                    Join Now
+                </a>
+            </div>
+        </section>
+        
+        <div class="stats">
+            <div>
+                <span class="stat-number" id="bookCount">0</span>
+                <span class="stat-label">Books Available</span>
+            </div>
+            <div>
+                <span class="stat-number" id="authorCount">0</span>
+                <span class="stat-label">Active Authors</span>
+            </div>
+            <div>
+                <span class="stat-number" id="saleCount">0</span>
+                <span class="stat-label">Books Sold</span>
+            </div>
+            <div>
+                <span class="stat-number" id="earningCount">$0</span>
+                <span class="stat-label">Paid to Authors</span>
+            </div>
+        </div>
+        
+        <div class="cta-buttons">
+            <a href="author-upload.html" class="btn" style="background: #3498db; color: white; padding: 20px 40px; font-size: 1.2rem;border-radius: 10px;">
+                👉 I'm an Author
+            </a>
+            <a href="reader-browse.html" class="btn" style="background: #2ecc71; color: white; padding: 20px 40px; font-size: 1.2rem;border-radius: 10px;">
+                👉 I'm a Reader
+            </a>
+        </div>
+    </main>
+    
+    <footer>
+         <p><a href="login.html">Login</a> | <a href="register.html">Register</a> | <a href="admin-dashboard.html">Admin</a></p>
+        
+        <p>Authors earn 70% | Platform commission 30%</p>
+        <p>@Blessings Thamanga</p>
+        <p>Phone No: +265 880 69 97 38</p>
+        <p>Email:    blessingsthamanga2@gmail.com</p>
+        
+        <p>© 2026 BookStore. All rights reserved.</p>
+    </footer>
+    
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update stats
+            const books = JSON.parse(localStorage.getItem('bookstore_books')) || [];
+            const users = JSON.parse(localStorage.getItem('bookstore_users')) || [];
+            const purchases = JSON.parse(localStorage.getItem('bookstore_purchases')) || [];
+            
+            document.getElementById('bookCount').textContent = books.length;
+            document.getElementById('authorCount').textContent = users.filter(u => u.type === 'author').length;
+            document.getElementById('saleCount').textContent = purchases.length;
+            
+            // Calculate total paid to authors
+            let totalPaid = 0;
+            purchases.forEach(p => {
+                totalPaid += p.total * 0.70;
+            });
+            document.getElementById('earningCount').textContent = '$' + totalPaid.toFixed(0);
+            
+            // Update auth buttons if logged in
+            const currentUser = JSON.parse(localStorage.getItem('bookstore_current_user'));
+            const authButtons = document.getElementById('authButtons');
+            
+            if (currentUser) {
+                let dashboardLink = 'reader-browse.html';
+                let dashboardText = 'Dashboard';
+                
+                if (currentUser.role === 'admin') {
+                    dashboardLink = 'admin-dashboard.html';
+                    dashboardText = '👑 Admin';
+                } else if (currentUser.type === 'author') {
+                    dashboardLink = 'author-dashboard.html';
+                    dashboardText = 'Author Dashboard';
+                }
+                
+                authButtons.innerHTML = `
+                    <span style="margin-right: 15px;">Welcome, ${currentUser.name}!</span>
+                    <a href="${dashboardLink}" class="btn" style="background: #9b59b6; color: white;">
+                        ${dashboardText}
+                    </a>
+                    <button onclick="logout()" class="btn" style="background: #e74c3c; color: white;">
+                        Logout
+                    </button>
+                `;
+            }
+        });
+        
+        function logout() {
+            localStorage.removeItem('bookstore_current_user');
+            alert('Logged out successfully');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            margin-bottom: -2px;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .user-type {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .user-option {
+            padding: 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-option:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .user-option.selected {
+            border-color: #3498db;
+            background: #e8f4fc;
+        }
+        
+        .user-option i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .btn-auth {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .btn-auth:hover {
+            background: #2980b9;
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+        
+        .auth-links a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">📚 BookStore</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="reader-browse.html">Browse Books</a>
+                <a href="author-upload.html">Sell Books</a>
+            </div>
+        </nav>
+        <h1>Welcome Back to BookStore</h1>
+        <p>Login to your account or create a new one</p>
+    </header>
+    
+    <main>
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <div class="error-message" id="loginError"></div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn-auth">Login to BookStore</button>
+                
+                <div class="auth-links">
+                    <a href="#" id="forgotPassword">Forgot password?</a>
+                </div>
+            </form>
+            
+            <!-- Registration Form -->
+            <form id="registerForm" class="auth-form">
+                <div class="error-message" id="registerError"></div>
+                
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" placeholder="John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" placeholder="you@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" minlength="6" placeholder="Minimum 6 characters" required>
+                </div>
+                
+                <div class="user-type">
+                    <div class="user-option selected" data-type="reader">
+                        <div>👤</div>
+                        <strong>Reader</strong>
+                        <small>Browse & buy books</small>
+                    </div>
+                    <div class="user-option" data-type="author">
+                        <div>✍️</div>
+                        <strong>Author</strong>
+                        <small>Sell your books</small>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="userType" value="reader">
+                
+                <button type="submit" class="btn-auth">Create Account</button>
+                
+                <div class="auth-links">
+                    Already have an account? <a href="#" class="switch-to-login">Login here</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© 2026 BookStore. All rights reserved.</p>
+        <p><a href="index.html">← Back to Home</a></p>
+    </footer>
+    
+    <script src="js/auth-script.js"></script>
+</body>
+</html>

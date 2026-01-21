@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .user-type {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0 30px;
+        }
+        
+        .user-option {
+            padding: 25px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-option:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .user-option.selected {
+            border-color: #3498db;
+            background: #e8f4fc;
+        }
+        
+        .user-option i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .benefits {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-item i {
+            color: #2ecc71;
+            margin-right: 10px;
+        }
+        
+        .commission-explanation {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">📚 BookStore</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="login.html">Login</a>
+            </div>
+        </nav>
+        <h1>Join BookStore Today</h1>
+        <p>Create your free account and start your journey</p>
+    </header>
+    
+    <main>
+        <div class="register-container">
+            <h2 style="text-align: center; margin-bottom: 30px;">Choose Your Account Type</h2>
+            
+            <div class="user-type">
+                <div class="user-option selected" id="readerOption" onclick="selectUserType('reader')">
+                    <div>👤</div>
+                    <strong style="font-size: 1.2rem;">Reader</strong>
+                    <small>Browse, purchase, and download books</small>
+                </div>
+                <div class="user-option" id="authorOption" onclick="selectUserType('author')">
+                    <div>✍️</div>
+                    <strong style="font-size: 1.2rem;">Author</strong>
+                    <small>Sell books and earn 70% royalties</small>
+                </div>
+            </div>
+            
+            <input type="hidden" id="userType" value="reader">
+            
+            <div class="benefits" id="readerBenefits">
+                <h3>Benefits for Readers:</h3>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Browse thousands of digital books</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Instant download after purchase</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Read on any device</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Lifetime access to purchased books</span>
+                </div>
+            </div>
+            
+            <div class="benefits" id="authorBenefits" style="display: none;">
+                <h3>Benefits for Authors:</h3>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Earn 70% royalties on every sale</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Global distribution instantly</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Keep full rights to your work</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Real-time sales dashboard</span>
+                </div>
+                <div class="benefit-item">
+                    <div>✅</div>
+                    <span>Monthly payments via Stripe</span>
+                </div>
+            </div>
+            
+            <div class="commission-explanation">
+                <strong>💰 Royalty Explanation:</strong>
+                <p>For every $10 book sale:</p>
+                <ul>
+                    <li>Author earns: <strong>$6.41</strong> (70% after payment fees)</li>
+                    <li>Platform commission: <strong>$2.41</strong> (30% after payment fees)</li>
+                    <li>Payment processing: $0.59 (2.9% + $0.30)</li>
+                </ul>
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" minlength="6" required>
+                    <small style="color: #7f8c8d;">Minimum 6 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms" required>
+                        I agree to the <a href="#" style="color: #3498db;">Terms of Service</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn" style="background: #3498db; color: white; width: 100%; padding: 15px; font-size: 1.1rem;">
+                    Create Account
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <p>Already have an account? <a href="login.html" style="color: #3498db;">Login here</a></p>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© 2026 BookStore. All rights reserved.</p>
+        <p><a href="index.html">← Back to Home</a></p>
+    </footer>
+    
+    <script>
+        function selectUserType(type) {
+            document.getElementById('userType').value = type;
+            
+            // Update UI
+            document.getElementById('readerOption').classList.remove('selected');
+            document.getElementById('authorOption').classList.remove('selected');
+            document.getElementById(type + 'Option').classList.add('selected');
+            
+            // Show/hide benefits
+            document.getElementById('readerBenefits').style.display = type === 'reader' ? 'block' : 'none';
+            document.getElementById('authorBenefits').style.display = type === 'author' ? 'block' : 'none';
+        }
+        
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const userType = document.getElementById('userType').value;
+            
+            if (!name || !email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            
+            // Check if user exists
+            const users = JSON.parse(localStorage.getItem('bookstore_users')) || [];
+            const userExists = users.some(user => user.email === email);
+            
+            if (userExists) {
+                alert('An account with this email already exists');
+                return;
+            }
+            
+            // Create user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                type: userType,
+                role: 'user',
+                createdAt: new Date().toISOString(),
+                balance: 0,
+                books: userType === 'author' ? [] : null
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('bookstore_users', JSON.stringify(users));
+            
+            // Auto login
+            const { password: _, ...userWithoutPassword } = newUser;
+            localStorage.setItem('bookstore_current_user', JSON.stringify(userWithoutPassword));
+            
+            alert(`🎉 Welcome to BookStore, ${name}!\n\nYou have successfully registered as a ${userType}.`);
+            
+            // Redirect
+            if (userType === 'author') {
+                window.location.href = 'author-dashboard.html';
+            } else {
+                window.location.href = 'reader-browse.html';
+            }
+        });
+    </script>
+</body>
+</html>

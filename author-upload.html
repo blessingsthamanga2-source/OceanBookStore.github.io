@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Book - BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .upload-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .upload-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: #ecf0f1;
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #ecf0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        
+        .step.active .step-number {
+            background: #3498db;
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .file-upload {
+            border: 2px dashed #3498db;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .file-upload:hover {
+            background: #e8f4fc;
+            border-color: #2980b9;
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .preview-box {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ecf0f1;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .preview-image {
+            max-width: 200px;
+            max-height: 300px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .royalty-calculator {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .calculator-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .calculator-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2ecc71;
+            margin-top: 10px;
+        }
+        
+        .btn-upload {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .btn-upload:hover {
+            background: #2980b9;
+        }
+        
+        .btn-upload:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">📚 BookStore</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="author-dashboard.html">Dashboard</a>
+                <a href="reader-browse.html">Browse Books</a>
+            </div>
+        </nav>
+        <h1>Upload Your Book</h1>
+        <p>Share your work with the world and earn 70% royalties</p>
+    </header>
+    
+    <main>
+        <div class="upload-container">
+            <!-- Upload Steps -->
+            <div class="upload-steps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div>Book Details</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div>Upload Files</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div>Set Price</div>
+                </div>
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <div>Publish</div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Book Details -->
+            <div class="upload-step" id="step1Content">
+                <h2>Book Details</h2>
+                <div class="form-group">
+                    <label for="bookTitle">Book Title *</label>
+                    <input type="text" id="bookTitle" placeholder="Enter your book title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="authorName">Author Name *</label>
+                    <input type="text" id="authorName" placeholder="Your name or pen name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Book Description *</label>
+                    <textarea id="description" rows="5" placeholder="Describe your book. What's it about? Who is it for?" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" required>
+                        <option value="">Select a category</option>
+                        <option value="fiction">Fiction</option>
+                        <option value="non-fiction">Non-Fiction</option>
+                        <option value="romance">Romance</option>
+                        <option value="mystery">Mystery</option>
+                        <option value="science-fiction">Science Fiction</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="biography">Biography</option>
+                        <option value="self-help">Self-Help</option>
+                        <option value="children">Children's Books</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="nextStep(2)">Next: Upload Files →</button>
+            </div>
+            
+            <!-- Step 2: Upload Files -->
+            <div class="upload-step" id="step2Content" style="display: none;">
+                <h2>Upload Files</h2>
+                
+                <div class="form-group">
+                    <label>Book Cover Image *</label>
+                    <div class="file-upload" onclick="document.getElementById('coverImage').click()">
+                        <div style="font-size: 3rem;">📷</div>
+                        <div style="font-size: 1.2rem; margin: 10px 0;">Click to upload cover image</div>
+                        <p>JPEG or PNG, recommended: 1200×1800 pixels</p>
+                        <input type="file" id="coverImage" accept="image/*" onchange="previewCover(this)">
+                    </div>
+                    <div id="coverPreview" class="preview-box"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Book File (PDF/EPUB) *</label>
+                    <div class="file-upload" onclick="document.getElementById('bookFile').click()">
+                        <div style="font-size: 3rem;">📄</div>
+                        <div style="font-size: 1.2rem; margin: 10px 0;">Click to upload book file</div>
+                        <p>PDF or EPUB format, maximum size: 50MB</p>
+                        <input type="file" id="bookFile" accept=".pdf,.epub" onchange="showFileInfo(this)">
+                    </div>
+                    <div id="fileInfo" class="preview-box"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Sample Chapter (Optional)</label>
+                    <div class="file-upload" onclick="document.getElementById('sampleFile').click()">
+                        <div style="font-size: 2rem;">📖</div>
+                        <div>Click to upload sample</div>
+                        <p>First few chapters (optional)</p>
+                        <input type="file" id="sampleFile" accept=".pdf,.epub" onchange="showSampleInfo(this)">
+                    </div>
+                    <div id="sampleInfo" class="preview-box"></div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn" onclick="prevStep(1)" style="flex: 1;">← Previous</button>
+                    <button class="btn btn-primary" onclick="nextStep(3)" style="flex: 1;">Next: Set Price →</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Set Price -->
+            <div class="upload-step" id="step3Content" style="display: none;">
+                <h2>Set Your Price</h2>
+                
+                <div class="form-group">
+                    <label for="price">Price (USD) *</label>
+                    <input type="number" id="price" min="0.99" max="99.99" step="0.01" placeholder="9.99" value="9.99" oninput="updateRoyaltyCalculator()" required>
+                    <small>Recommended: $2.99 - $14.99 for ebooks</small>
+                </div>
+                
+                <div class="royalty-calculator">
+                    <h3>💰 Royalty Calculator</h3>
+                    <div class="calculator-row">
+                        <span>Book Price:</span>
+                        <span>$<span id="displayPrice">9.99</span></span>
+                    </div>
+                    <div class="calculator-row">
+                        <span>Payment Processing Fee (2.9% + $0.30):</span>
+                        <span>-$<span id="processingFee">0.59</span></span>
+                    </div>
+                    <div class="calculator-row">
+                        <span>Your Royalty (70%):</span>
+                        <span style="color: #3498db;">$<span id="authorEarning">6.99</span></span>
+                    </div>
+                    <div class="calculator-row">
+                        <span>Platform Commission (30%):</span>
+                        <span style="color: #2ecc71;">$<span id="platformEarning">2.99</span></span>
+                    </div>
+                    <div class="calculator-total">
+                        You earn: $<span id="netEarning">6.40</span> per sale
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn" onclick="prevStep(2)" style="flex: 1;">← Previous</button>
+                    <button class="btn btn-primary" onclick="nextStep(4)" style="flex: 1;">Next: Publish →</button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Publish -->
+            <div class="upload-step" id="step4Content" style="display: none;">
+                <h2>Review and Publish</h2>
+                
+                <div class="preview-box">
+                    <h3 id="reviewTitle">Book Title</h3>
+                    <p id="reviewAuthor">by Author Name</p>
+                    <p id="reviewCategory">Category: Fiction</p>
+                    <p id="reviewPrice">Price: $9.99</p>
+                    <p><strong>Description:</strong></p>
+                    <p id="reviewDescription">Book description will appear here...</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="agreeTerms" required>
+                        I confirm that I own the rights to this book and agree to the <a href="#" style="color: #3498db;">Terms of Service</a>
+                    </label>
+                </div>
+                
+                <button class="btn-upload" id="publishBtn" onclick="publishBook()">Publish Book & Start Earning 70%</button>
+                
+                <div style="display: flex; gap: 15px; margin-top: 15px;">
+                    <button class="btn" onclick="prevStep(3)" style="flex: 1;">← Edit Details</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>© 2026 BookStore. All rights reserved.</p>
+        <p><a href="index.html">← Back to Home</a> | <a href="author-dashboard.html">Author Dashboard</a></p>
+    </footer>
+    
+    <script src="js/author-script.js"></script>
+</body>
+</html>

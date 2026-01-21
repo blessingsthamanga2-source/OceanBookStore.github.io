@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Books - BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .search-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px 25px;
+            border: 2px solid #ecf0f1;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .search-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            background: #f8f9fa;
+            border: 2px solid #ecf0f1;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .book-cover {
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .book-info {
+            padding: 20px;
+        }
+        
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .book-author {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .book-price {
+            font-size: 1.5rem;
+            color: #2ecc71;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .book-rating {
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+        
+        .btn-buy {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .btn-buy:hover {
+            background: #27ae60;
+        }
+        
+        .cart-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #e74c3c;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            z-index: 1000;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #2c3e50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1001;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .book-details h3 {
+            margin: 15px 0 10px;
+            color: #2c3e50;
+        }
+        
+        .btn-download {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ecc71;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1002;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">📚 BookStore</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="reader-browse.html" class="active">Browse</a>
+                <a href="author-upload.html">Sell Books</a>
+            </div>
+        </nav>
+        <h1>Discover Amazing Books</h1>
+        <p>Browse, purchase, and download instantly</p>
+    </header>
+    
+    <main>
+        <!-- Search & Filter -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search books by title, author, or keyword...">
+                <button class="search-btn" id="searchBtn">🔍 Search</button>
+            </div>
+            
+            <div class="categories">
+                <button class="category-btn active" data-category="all">All Books</button>
+                <button class="category-btn" data-category="fiction">Fiction</button>
+                <button class="category-btn" data-category="non-fiction">Non-Fiction</button>
+                <button class="category-btn" data-category="romance">Romance</button>
+                <button class="category-btn" data-category="mystery">Mystery</button>
+                <button class="category-btn" data-category="science-fiction">Science Fiction</button>
+                <button class="category-btn" data-category="fantasy">Fantasy</button>
+                <button class="category-btn" data-category="self-help">Self-Help</button>
+            </div>
+        </div>
+        
+        <!-- Books Grid -->
+        <div class="books-grid" id="booksGrid">
+            <!-- Books will be loaded here -->
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="noBooksMessage" style="display: none;">
+            <div>📚</div>
+            <h3>No Books Found</h3>
+            <p>Try a different search or check back later for new books!</p>
+            <button class="btn btn-primary" onclick="clearSearch()">
+                Show All Books
+            </button>
+        </div>
+    </main>
+    
+    <!-- Book Details Modal -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalBookTitle">Book Title</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBookDetails">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cart Icon -->
+    <div class="cart-icon" id="cartIcon">
+        🛒
+        <div class="cart-count" id="cartCount">0</div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        Book added to cart!
+    </div>
+    
+    <footer>
+        <p>© 2026 BookStore. All rights reserved.</p>
+        <p><a href="index.html">← Back to Home</a> | <a href="author-upload.html">Become an Author</a></p>
+    </footer>
+    
+    <script src="js/reader-script.js"></script>
+</body>
+</html>

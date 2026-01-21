@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seed Admin User</title>
+</head>
+<body>
+    <h1>Seed Admin User</h1>
+    <button onclick="seedAdmin()">Create Admin User</button>
+    
+    <script>
+        function seedAdmin() {
+            const users = JSON.parse(localStorage.getItem('bookstore_users')) || [];
+            
+            // Check if admin already exists
+            const adminExists = users.some(user => user.email === 'admin@bookstore.com');
+            
+            if (adminExists) {
+                alert('Admin user already exists');
+                return;
+            }
+            
+            // Create admin user
+            const adminUser = {
+                id: 1,
+                name: 'BLESSINGS THAMANGA',
+                email: 'blessingsthamanga2@gmail.com',
+                password: 'Onefamily@28',
+                type: 'admin',
+                role: 'admin',
+                createdAt: new Date().toISOString(),
+                balance: 0,
+                books: null
+            };
+            
+            users.push(adminUser);
+            localStorage.setItem('bookstore_users', JSON.stringify(users));
+            
+            alert('✅ Admin user created!\n\nEmail: admin@bookstore.com\nPassword: admin123\n\nYou can now login as admin.');
+        }
+    </script>
+</body>
+</html>
