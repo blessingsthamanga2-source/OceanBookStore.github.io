@@ -63,7 +63,7 @@ nav {
     padding: 8px 16px;
     border-radius: 8px;
     transition: all 0.3s;
-    margin : left;
+    margin-left : 20px;
 }
 
 .nav-links a:hover {
@@ -405,3 +405,4 @@ footer a:hover {
     }
 
 }
+
