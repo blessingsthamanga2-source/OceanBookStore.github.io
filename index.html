@@ -30,9 +30,28 @@
             margin-bottom: 15px;
             opacity: 0.9;
         }
-        .nav.a{
-            margin-left: 20px;
+        .nav-links a {
+            text-decoraton: none;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-left : 20px;
         }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+            background: #3498db;
+            color: white;
+        }
+
+        .nav-links a.active {
+           background: #3498db;
+           color: white;
+        }
+    
         
         .features {
             display: grid;
@@ -263,6 +282,7 @@
 </body>
 
 </html>
+
 
 
 
