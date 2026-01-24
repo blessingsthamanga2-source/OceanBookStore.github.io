@@ -67,6 +67,7 @@ nav {
 }
 
 .nav-links a:hover {
+    text-decoration: underline;
     background: #3498db;
     color: white;
 }
@@ -405,4 +406,5 @@ footer a:hover {
     }
 
 }
+
 
