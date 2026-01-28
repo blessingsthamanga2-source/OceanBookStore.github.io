@@ -371,45 +371,103 @@ function buyNow(book) {
     }, 1000);
 }
 
-// Download sample (demo)
-function downloadSample(bookId) {
-    const book = currentBooks.find(b => b.id === bookId);
-    if (!book) return;
+// REAL DOWNLOAD FUNCTION
+async function downloadBook(bookId) {
+    try {
+        // Get the book from our backend
+        const response = await fetch(`http://localhost:5000/api/books/${bookId}`);
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error('Book not found');
+        }
+        
+        const book = data.book;
+        
+        // Check if user has purchased (simplified for now)
+        // In real app, check purchase records
+        const hasPurchased = confirm(`Download "${book.title}"?\n\nPrice: $${book.price}\n\nClick OK to download (demo: no payment required)`);
+        
+        if (!hasPurchased) return;
+        
+        // Download the file
+        const link = document.createElement('a');
+        link.href = book.bookFile.url;
+        link.download = `${book.title.replace(/[^a-z0-9]/gi, '_')}.${book.bookFile.format || 'pdf'}`;
+        link.target = '_blank';
+        
+        // For Cloudinary, we need to add download parameter
+        if (book.bookFile.url.includes('cloudinary.com')) {
+            link.href = book.bookFile.url.replace('/upload/', '/upload/fl_attachment/');
+        }
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show success message
+        alert(`✅ Download started!\n\n"${book.title}" is downloading.\n\nFile: ${link.download}`);
+        
+    } catch (error) {
+        console.error('Download error:', error);
+        alert(`Download failed: ${error.message}`);
+    }
+}
+
+// Download sample function
+async function downloadSample(bookId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/books/${bookId}`);
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error('Book not found');
+        }
+        
+        const book = data.book;
+        
+        // Create sample download link
+        const link = document.createElement('a');
+        
+        // For demo, use the actual book file as sample
+        // In real app, you'd have separate sample file
+        link.href = book.bookFile.url;
+        link.download = `Sample_${book.title.replace(/[^a-z0-9]/gi, '_')}.${book.bookFile.format || 'pdf'}`;
+        link.target = '_blank';
+        
+        // For Cloudinary, add sample parameter
+        if (book.bookFile.url.includes('cloudinary.com')) {
+            link.href = book.bookFile.url.replace('/upload/', '/upload/fl_attachment:Sample_/');
+        }
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        alert(`✅ Sample downloading!\n\nSample of "${book.title}"`);
+        
+    } catch (error) {
+        console.error('Sample download error:', error);
+        alert(`Sample download failed: ${error.message}`);
+    }
+}
+
+// Update the modal to use real downloads
+async function openBookDetails(book) {
+    // ... existing modal code ...
     
-    // Create sample text
-    const sampleText = `
-        SAMPLE CHAPTER
-        ==============
-        
-        ${book.title}
-        by ${book.author}
-        
-        This is a sample from "${book.title}"
-        
-        In a real implementation, this would be the first chapter
-        or a few pages from the book.
-        
-        For demonstration purposes only.
-        
-        Price: $${book.price.toFixed(2)}
-        Category: ${book.category}
-        
-        Thank you for your interest in this book!
-        Purchase the full version to continue reading.
+    // Add download button that uses real download
+    const modalBody = document.getElementById('modalBookDetails');
+    modalBody.innerHTML += `
+        <div style="margin-top: 20px;">
+            <button onclick="downloadBook('${book.id}')" class="btn-buy" style="width: 100%;">
+                ⬇️ Download Book ($${book.price})
+            </button>
+            <button onclick="downloadSample('${book.id}')" class="btn-download" style="width: 100%; margin-top: 10px; background: #3498db;">
+                📖 Download Sample (Free)
+            </button>
+        </div>
     `;
-    
-    // Create and download file
-    const blob = new Blob([sampleText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Sample_${book.title.replace(/[^a-z0-9]/gi, '_')}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showNotification('Sample downloaded!');
 }
 
 // Update cart count
@@ -472,4 +530,5 @@ window.Reader = {
     buyNow,
     filterBooks,
     loadBooks
+
 };
