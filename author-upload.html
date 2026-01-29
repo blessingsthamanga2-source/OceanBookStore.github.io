@@ -218,27 +218,31 @@
             <div class="upload-step" id="step2Content" style="display: none;">
                 <h2>Upload Files</h2>
                 
-                <div class="form-group">
-                    <label>Book Cover Image *</label>
-                    <div class="file-upload" onclick="document.getElementById('coverImage').click()">
-                        <div style="font-size: 3rem;">📷</div>
-                        <div style="font-size: 1.2rem; margin: 10px 0;">Click to upload cover image</div>
-                        <p>JPEG or PNG, recommended: 1200×1800 pixels</p>
-                        <input type="file" id="coverImage" accept="image/*" onchange="previewCover(this)">
-                    </div>
-                    <div id="coverPreview" class="preview-box"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Book File (PDF/EPUB) *</label>
-                    <div class="file-upload" onclick="document.getElementById('bookFile').click()">
-                        <div style="font-size: 3rem;">📄</div>
-                        <div style="font-size: 1.2rem; margin: 10px 0;">Click to upload book file</div>
-                        <p>PDF or EPUB format, maximum size: 50MB</p>
-                        <input type="file" id="bookFile" accept=".pdf,.epub" onchange="showFileInfo(this)">
-                    </div>
-                    <div id="fileInfo" class="preview-box"></div>
-                </div>
+               <!-- Book Cover -->
+<div class="form-group">
+    <label for="coverImage">Book Cover Image *</label>
+    <div class="file-upload" id="coverUploadBox">
+        <div class="file-label">
+            📷 Click to upload cover image
+        </div>
+        <p>JPEG or PNG, minimum 800x1200 pixels</p>
+        <input type="file" id="coverImage" accept="image/*" required>
+    </div>
+    <div id="coverPreview"></div>
+</div>
+
+<!-- Book File -->
+<div class="form-group">
+    <label for="bookFile">Book File (PDF/EPUB) *</label>
+    <div class="file-upload" id="bookUploadBox">
+        <div class="file-label">
+            📄 Click to upload book file
+        </div>
+        <p>PDF or EPUB format, max file size: 50MB</p>
+        <input type="file" id="bookFile" accept=".pdf,.epub" required>
+    </div>
+    <div id="fileInfo"></div>
+</div>
                 
                 <div class="form-group">
                     <label>Sample Chapter (Optional)</label>
@@ -343,6 +347,7 @@
 </body>
 
 </html>
+
 
 
 
