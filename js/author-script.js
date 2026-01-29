@@ -4,14 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const form = document.getElementById('bookUploadForm');
     const priceInput = document.getElementById('price');
-    const step1Section = document.querySelector('.form-step[data-step="1"]');
-    const step2Section = document.querySelector('.form-step[data-step="2"]');
     const nextStepBtn = document.getElementById('nextStepBtn');
     const prevStepBtn = document.getElementById('prevStepBtn');
     
+    // Step management
     let currentStep = 1;
     
-    // Show step function
     function showStep(step) {
         // Hide all steps
         document.querySelectorAll('.form-step').forEach(section => {
@@ -19,78 +17,66 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Show current step
-        const currentStepSection = document.querySelector(`.form-step[data-step="${step}"]`);
-        if (currentStepSection) {
-            currentStepSection.style.display = 'block';
+        const stepElement = document.querySelector(`.form-step[data-step="${step}"]`);
+        if (stepElement) {
+            stepElement.style.display = 'block';
         }
         
-        // Update step indicators
-        document.querySelectorAll('.step-indicator').forEach(indicator => {
-            indicator.classList.remove('active');
-        });
-        document.querySelector(`.step-indicator[data-step="${step}"]`).classList.add('active');
-        
-        currentStep = step;
-        
-        // Update button visibility
+        // Update buttons
         if (step === 1) {
             prevStepBtn.style.display = 'none';
-            nextStepBtn.style.display = 'block';
             nextStepBtn.textContent = 'Next: Upload File';
-        } else if (step === 2) {
-            prevStepBtn.style.display = 'block';
-            nextStepBtn.style.display = 'block';
+        } else {
+            prevStepBtn.style.display = 'inline-block';
             nextStepBtn.textContent = 'Publish Book';
         }
+        
+        currentStep = step;
     }
     
-    // Initialize first step
+    // Initialize
     showStep(1);
     
-    // Next step button
-    if (nextStepBtn) {
-        nextStepBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+    // Next button click
+    nextStepBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        if (currentStep === 1) {
+            // Validate step 1
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('authorName').value.trim();
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value.trim();
+            const category = document.getElementById('category').value;
             
-            if (currentStep === 1) {
-                // Validate step 1
-                const title = document.getElementById('bookTitle').value;
-                const author = document.getElementById('authorName').value;
-                const price = document.getElementById('price').value;
-                const description = document.getElementById('description').value;
-                const category = document.getElementById('category').value;
-                
-                if (!title || !author || !price || !description || !category) {
-                    alert('Please fill in all required fields in Step 1.');
-                    return;
-                }
-                
-                showStep(2);
-            } else if (currentStep === 2) {
-                // This will trigger the form submission
-                form.dispatchEvent(new Event('submit'));
+            if (!title || !author || !price || !description || !category) {
+                alert('Please fill in all required fields.');
+                return;
             }
-        });
-    }
+            
+            showStep(2);
+            
+        } else if (currentStep === 2) {
+            // Upload files and save book
+            await uploadBook();
+        }
+    });
     
-    // Previous step button
-    if (prevStepBtn) {
-        prevStepBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showStep(1);
-        });
-    }
+    // Previous button
+    prevStepBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showStep(1);
+    });
     
-    // Royalty Calculator
+    // Royalty calculator
     function updateRoyaltyCalculator() {
         const price = parseFloat(priceInput.value) || 0;
         
-        const authorShare = price * 0.70; // 70%
-        const platformShare = price * 0.30; // 30%
+        const authorShare = price * 0.70;
+        const platformShare = price * 0.30;
         const paymentFee = (price * 0.029) + 0.30;
         const netAuthorEarn = authorShare - paymentFee;
         
-        // Update display
         document.getElementById('priceDisplay').textContent = price.toFixed(2);
         document.getElementById('authorEarn').textContent = authorShare.toFixed(2);
         document.getElementById('platformFee').textContent = platformShare.toFixed(2);
@@ -114,8 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     coverPreview.innerHTML = `
-                        <img src="${e.target.result}" style="max-width: 200px; border-radius: 5px; margin-top: 10px;">
-                        <p>${file.name} (${(file.size/1024/1024).toFixed(2)} MB)</p>
+                        <div style="margin-top: 10px;">
+                            <img src="${e.target.result}" style="max-width: 200px; border-radius: 5px;">
+                            <p>${file.name} (${(file.size/1024/1024).toFixed(2)} MB)</p>
+                        </div>
                     `;
                 };
                 reader.readAsDataURL(file);
@@ -128,8 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const file = e.target.files[0];
             if (file) {
                 const isValid = file.type === 'application/pdf' || 
-                               file.name.endsWith('.epub') || 
-                               file.name.endsWith('.mobi');
+                               file.name.toLowerCase().endsWith('.epub');
                 
                 if (isValid && file.size <= 50 * 1024 * 1024) {
                     fileInfo.innerHTML = `
@@ -141,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     fileInfo.innerHTML = `
                         <div style="margin-top: 10px; padding: 10px; background: #ffebee; border-radius: 5px; color: #c62828;">
-                            ❌ Invalid file. Must be PDF/EPUB under 50MB
+                            ❌ Invalid file. Must be PDF or EPUB under 50MB
                         </div>
                     `;
                     bookFile.value = '';
@@ -150,33 +137,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // REAL UPLOAD - Form Submission
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
+    // UPLOAD FUNCTION
+    async function uploadBook() {
         // Get form data
-        const title = document.getElementById('bookTitle').value;
-        const author = document.getElementById('authorName').value;
+        const title = document.getElementById('bookTitle').value.trim();
+        const author = document.getElementById('authorName').value.trim();
         const price = parseFloat(document.getElementById('price').value);
-        const description = document.getElementById('description').value;
+        const description = document.getElementById('description').value.trim();
         const category = document.getElementById('category').value;
         const coverFile = document.getElementById('coverImage').files[0];
         const bookFileInput = document.getElementById('bookFile').files[0];
         
-        // Final validation
-        if (!title || !author || !price || !description || !category || !coverFile || !bookFileInput) {
-            alert('Please fill all fields and upload files.');
-            showStep(2); // Go back to step 2 if files missing
+        // Validate files
+        if (!coverFile || !bookFileInput) {
+            alert('Please upload both cover image and book file.');
             return;
         }
         
-        // Show loading
-        const submitBtn = nextStepBtn;
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Uploading...';
-        submitBtn.disabled = true;
+        // Change button to loading
+        nextStepBtn.disabled = true;
+        nextStepBtn.textContent = 'Uploading...';
         
         try {
+            console.log('Starting upload process...');
+            
             // Step 1: Upload cover image
             console.log('Uploading cover image...');
             const coverFormData = new FormData();
@@ -188,9 +172,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const coverData = await coverResponse.json();
-            if (!coverData.success) throw new Error('Cover upload failed');
+            console.log('Cover response:', coverData);
             
-            console.log('Cover uploaded:', coverData.url);
+            if (!coverData.success) {
+                throw new Error('Cover upload failed: ' + (coverData.error || 'Unknown error'));
+            }
             
             // Step 2: Upload book file
             console.log('Uploading book file...');
@@ -203,9 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const bookData = await bookResponse.json();
-            if (!bookData.success) throw new Error('Book file upload failed');
+            console.log('Book response:', bookData);
             
-            console.log('Book file uploaded:', bookData.url);
+            if (!bookData.success) {
+                throw new Error('Book upload failed: ' + (bookData.error || 'Unknown error'));
+            }
             
             // Step 3: Save book to database
             console.log('Saving book to database...');
@@ -216,15 +204,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 description,
                 category,
                 bookFile: {
-                    url: bookData.url,
-                    public_id: bookData.public_id,
-                    format: bookData.format
+                    url: 'http://localhost:5000' + bookData.file.url,
+                    filename: bookData.file.filename
                 },
                 coverImage: {
-                    url: coverData.url,
-                    public_id: coverData.public_id
+                    url: 'http://localhost:5000' + coverData.file.url,
+                    filename: coverData.file.filename
                 }
             };
+            
+            console.log('Sending book data:', bookPayload);
             
             const saveResponse = await fetch('http://localhost:5000/api/books', {
                 method: 'POST',
@@ -235,32 +224,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const saveData = await saveResponse.json();
+            console.log('Save response:', saveData);
             
             if (saveData.success) {
-                alert(`🎉 SUCCESS!\n\n"${title}" uploaded successfully!\n\nCover: ✅\nBook File: ✅\nDatabase: ✅\n\nBook is now live in the store!`);
+                // SUCCESS!
+                alert(`🎉 SUCCESS!\n\n"${title}" has been uploaded successfully!\n\nThe book is now available in the store.\n\nYou will earn 70% of each sale.`);
                 
-                // Reset form
+                // Reset form and go back to step 1
                 form.reset();
-                if (coverPreview) coverPreview.innerHTML = '';
-                if (fileInfo) fileInfo.innerHTML = '';
+                coverPreview.innerHTML = '';
+                fileInfo.innerHTML = '';
                 updateRoyaltyCalculator();
-                showStep(1); // Go back to step 1
+                showStep(1);
                 
-                // Redirect after 3 seconds
+                // Redirect to browse page after 2 seconds
                 setTimeout(() => {
                     window.location.href = 'reader-browse.html';
-                }, 3000);
+                }, 2000);
                 
             } else {
-                throw new Error('Failed to save book to database');
+                throw new Error('Database save failed: ' + (saveData.error || 'Unknown error'));
             }
             
         } catch (error) {
-            console.error('Upload error:', error);
-            alert(`Upload failed: ${error.message}\n\nPlease try again.`);
+            console.error('❌ Upload error:', error);
+            alert(`Upload failed: ${error.message}\n\nPlease check:\n1. Backend server is running\n2. MongoDB is running\n3. Check browser console for details`);
         } finally {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+            // Reset button
+            nextStepBtn.disabled = false;
+            nextStepBtn.textContent = 'Publish Book';
         }
-    });
+    }
 });
